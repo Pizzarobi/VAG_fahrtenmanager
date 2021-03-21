@@ -1,0 +1,19 @@
+Features:
+- Webpage or service that shows you when your bus is coming
+- Textsearch for 
+
+Design:
+- Google like Design (Material? Flutter?)
+
+Constraints:
+- Search field needs to autofill otherwise there will be problems regarding some stations. ("Hauptbahnhof Nürnberg" has no results)
+
+Useful stuff:
+- VGN/VAG API: https://start.vag.de/dm/swagger/ui/index#/
+- VAG Departures / ReactJS https://github.com/justusjonas74/vag-departures  https://justusjonas74.github.io/vag-departures/
+
+
+Google Assistant integration:
+- "Ok Google, spreche mit Wann kommt mein Bus?"
+  --> Takes Home Location from Google and asks VAG API. "Der naechste [Bus/Ubahn/Straba] [NR] in Richtung [Endhaltestelle] faehrt um [AbfahrtZeit]  ab"
+  --> Takes preconfigured Location, Destination . "Die naechste Abfahrt ist um [AbfahrtZeit]"
