@@ -1,5 +1,5 @@
 # VAG_fahrtenmanager
-VAG_fahrtenmanager is a simple but effective alternative to the VAG/VGN departure planer, which shows you real-time departures from a bus stop or GPS Location.
+VAG_fahrtenmanager is a simple but effective alternative to the VAG/VGN departure viewer, which shows you real-time departures from a bus stop or GPS Location.
 Also it is just a simple Site/Program to get back into HTML and CSS coding and to learn JavaScript.
 
 ## Features
