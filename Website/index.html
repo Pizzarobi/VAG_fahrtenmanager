@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" style="color: #1e1e1e;padding: 0px;">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>VAG Abfahrten</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,600i,700">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300">
+    <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/fonts/material-icons.min.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+
+    <link rel="stylesheet" href="assets/css/search.css">
+</head>
+
+<body style="color: #e1e1e1;background: #171717;padding: 10px;">
+    <!-- Heading -->
+    <h1 style="text-align: center;font-size: 50px;font-family: 'Open Sans', sans-serif;font-weight: bold;font-style: normal;padding: 5px;padding-bottom: 0px;">VAG Abfahrten</h1>
+    
+    <!-- Searchbox -->
+    <div class="containerSearch">
+        <div class="wrapperSearch">
+          <input type="text" name="search" id="search" placeholder="Haltestelle eingeben..." autocomplete="chrome-off">
+          <button  id="searchButton"><i class="fa fa-search"></i></button>
+          <div class="results" id="resultsWrapper">
+            <ul>
+                <!-- <li id="result">some content</li> -->
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    <!-- Heading 2 -->
+    <h4 id="currentStation" style="text-align: center; font-size: 40px;"></h4>
+    <h5 id="currentHaltID" style="text-align: center;font-size: 15px; padding-bottom: 5px;"></h5>
+
+
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/js/bs-init.js"></script>
+    <script src="assets/js/abfahrten.js"></script>
+</body>
+
+</html>

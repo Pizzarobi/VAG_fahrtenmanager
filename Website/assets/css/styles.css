@@ -1,0 +1,97 @@
+.opnvcard {
+  background: #1e1e1e;
+  padding: 0px;
+  margin: 15px;
+  width: auto;
+  margin-right: auto;
+  margin-left: auto;
+  max-width: 900px;
+  height: auto;
+}
+
+.containerSearch {
+  padding: 15px;
+}
+  
+.wrapperSearch {
+  margin: 0 auto;
+  background: #1E1E1E;
+  border-radius: 5px;
+  box-shadow: 0px 1px 5px 3px rgba(0,0,0,0.15);
+  position: relative;
+  width: auto;
+  max-width: 750px;
+  z-index:100;
+}
+
+input {
+  width:100%;
+  border: none;
+  height: 50px;
+  border-radius: 5px;
+  padding: 0px 40px 0px 10px;
+  font-size: 18px;
+  box-shadow: 0px 1px 4px rgba(0,0,0,0.1);
+}
+
+input:focus {
+  outline: none;
+}
+
+button {
+  position: absolute;
+  border: none;
+  background: none;
+  top: 0;
+  right: 0;
+  height: 50px;
+  line-height: 50px;
+  padding: 0;
+  width: 50px;
+}
+
+button:focus {
+  outline: none;
+}
+
+button i {
+  width: 100%;
+  color: #6d7b98;
+  line-height: 50px;
+  font-size: 22px;
+}
+
+.results {
+  background: #1E1E1E;
+  padding: 0px;
+  width: 100%;
+  max-width: 750px;
+  position: absolute;
+  z-index: 100;
+}
+
+.results ul {
+    margin: 0; 
+    padding: 0;
+}
+.results ul li {
+  list-style: none;
+  border-radius: 3px;
+  opacity: 0;
+  display: none;
+  padding: 8px 12px;
+  transition: all .5s linear;
+}
+
+.show .results ul li {
+  opacity: 1;
+  display: block;
+}
+
+.show .results {
+  padding: 10px;
+}
+
+.results ul li:hover {
+  background: #ececec33
+}
