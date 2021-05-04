@@ -4,10 +4,12 @@ const resultsWrapper = document.getElementById('resultsWrapper');
 const currentStation = document.getElementById('currentStation');
 const currentHaltID = document.getElementById('currentHaltID');
 const searchButton = document.getElementById('searchButton');
-
+// const opnvicons = document.getElementsByClassName('.opnvicon');
 
 var haltname;
 var haltID;
+var fahrtnummer;
+var type;
 
 var haltnames = [];
 var haltIDs = [];
@@ -21,7 +23,7 @@ searchInput.addEventListener("keyup", e => {
 
     let input = searchInput.value;
     if (input.length >= 4) {
-        searchHaltName(input);
+        searchHaltName();
     }else {
         searchWrapper.classList.remove('show');
     }
@@ -34,48 +36,40 @@ searchButton.addEventListener("click", () =>{
 const searchHaltName = async searchText => {
     const res = await fetch('https://start.vag.de/dm/api/v1/haltestellen/VAG?name='+ searchInput.value);
     const haltnamesraw = await res.json();
-    //console.log(HaltIDs.Haltestellen);
 
     haltnames = [];
     haltIDs = [];
     for(var k in haltnamesraw.Haltestellen){
-        //console.log(haltnamesraw.Haltestellen[k].VAGKennung);
         haltnames[k] = [haltnamesraw.Haltestellen[k].Haltestellenname];
         haltIDs[k] = [haltnamesraw.Haltestellen[k].VAGKennung];
     }
-    
-    //console.log(haltnames);
-    
-    if (!haltnames.length) {
-        return searchWrapper.classList.remove('show');
-    }
 
-    const content = haltnames
-    .map((item) => {
+    if (!haltnames.length) {
+        haltnames[0] = "Kein Ergebnis";
+    }
+    //Shows Content on 
+    let content = haltnames.map((item) => {
     return `<li id="result">${item}</li>`;
     })
     .join('');
-
-    searchWrapper.classList.add('show');
     resultsWrapper.innerHTML = `<ul>${content}</ul>`;
+    searchWrapper.classList.add('show');
 }
 
 resultsWrapper.addEventListener("click", searchClick);
 resultsWrapper.addEventListener("touchend", searchClick);//Janky stuff for phone
 
 function searchClick(event){
-    //console.info(event);
     if(event.target.id == "result"){
         clickHandler(event.target.innerHTML);
     }
 }
 
 function clickHandler(busstop){
-    haltname = busstop;
     searchWrapper.classList.remove('show');
     searchInput.value = "";
-    currentStation.innerHTML = haltname;
-    getHaltID();
+    currentStation.innerHTML = busstop;
+    getHaltID(); //should be obsolete in newabfahrten.js
     getAbfahrten();
 }
 
@@ -111,7 +105,7 @@ const getAbfahrten = async searchText => {
 }
 
 function clearAbfahrten(){
-    abfahrten.length = new Array();
+    abfahrten.length = 0;
     const elements = document.getElementsByClassName('opnvcard');
     while(elements.length > 0){
         elements[0].parentNode.removeChild(elements[0]);
@@ -136,7 +130,7 @@ function renderAbfahrten(){
         }
         var route = abfahrten[k].route;
 
-        var departureIn
+        var departureIn;
         if(abfahrten[k].departureIn == 0)
             departureIn = "Gleich";
         else
@@ -150,7 +144,7 @@ function renderAbfahrten(){
                 '<div class="card-body" style="padding: 10px;margin: 0px;padding-right: 10px;">',
                     '<div class="row" style="margin: 5px;">',
                         '<div class="w-100 d-flex"></div>',
-                        '<div class="col-auto" style="padding: 0px;width: 10%;"><i class="material-icons d-flex justify-content-center align-items-start" data-toggle="tooltip" title="'+ tooltip +'" data-bss-tooltip="" style="font-size: 40px;">' + icon + '</i>',
+                        '<div id="opnvicon" class="col-auto" style="padding: 0px;width: 10%;"><i id="opnvicon" class="material-icons d-flex justify-content-center align-items-start" data-toggle="tooltip" info="'+ tooltip + '" title="Klicken fuer mehr Info" data-bss-tooltip="" style="font-size: 40px;">' + icon + '</i>',
                             '<p style="width: auto;font-size: 25px;margin: 0px;">'+ route + '</p>',
                         '</div>',
                         '<div class="col-3 d-flex justify-content-center align-items-center" style="padding: 0px;max-width: 800px;">',
@@ -166,6 +160,59 @@ function renderAbfahrten(){
     
         $("body").append(opnvCardTemplate);
     }
+    opnvicons = document.getElementsByClassName('.opnvicon');
+}
+
+document.querySelector('body').addEventListener('click', function(event) {
+    if (event.target.id == 'opnvicon') {
+        fahrtnummer = event.target.attributes.info.value;
+        var typeraw = event.target.innerHTML;
+        switch(typeraw){
+            case "directions_bus":
+                type = "Bus";
+                break;
+            case "tram":
+                type = "Tram";
+                break;
+            case "directions_subway":
+                type = "UBahn";
+                break;
+        }
+        currentHaltID.innerHTML = "ID: "+fahrtnummer+" "+ type;
+
+        getFahrtplan();
+    }
+});
+
+const getFahrtplan = async searchText => {
+    clearAbfahrten();
+    const res = await fetch('https://start.vag.de/dm/api/v1/fahrten/'+ type + "/" + fahrtnummer);
+    const fahrtenraw = await res.json();
+
+    currentStation.innerHTML = fahrtenraw.Linienname + " Richtung " + fahrtenraw.Richtungstext;
+    
+    for(var k in fahrtenraw.Fahrtverlauf){
+        var route = fahrtenraw.Linienname;
+        var destination = fahrtenraw.Fahrtverlauf[k].Haltestellenname;
+        var abfahrtsZeitIst = new Date(fahrtenraw.Fahrtverlauf[k].AbfahrtszeitIst);
+        var departureIn = Math.floor((abfahrtsZeitIst-Date.now())/1000/60);
+        var Produkt = fahrtenraw.Produkt;
+        var tripnbr = fahrtenraw.Fahrtnummer;
+
+        abfahrten.push(new abfahrtObj(route,destination,departureIn,Produkt,tripnbr));
+    }
+    filterAbfahrten();
+    renderAbfahrten();
+}
+
+function filterAbfahrten(){
+    var tempAbfahrten = new Array();
+    for (var k in abfahrten){
+        if(abfahrten[k].departureIn >= 0){
+            tempAbfahrten.push(abfahrten[k]);
+        }
+    }
+    abfahrten = tempAbfahrten;
 }
 
 //AbfahrtObject stuff
@@ -176,15 +223,3 @@ function abfahrtObj(route, destination, departureIn, type, tripnbr){
     this.type = type;
     this.tripnbr = tripnbr;
 }
-
-// resultsWrapper.addEventListener("click", event => {
-//     searchWrapper.classList.remove('show');
-//     haltname = event.originalTarget.innerHTML;
-//     searchInput.value = haltname;
-// });
-
-// Fahrtenanzeige
-
-// var AbfahrtObj001 = new AbfahrtObj("37", "Fü-Hauptbahnhof", "2021-04-24T18:20:09+02:00", "Bus");
-
-// console.log(AbfahrtObj001.type);
