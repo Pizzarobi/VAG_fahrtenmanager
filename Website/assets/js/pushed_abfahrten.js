@@ -1,4 +1,3 @@
-// Does not work
 const searchInput = document.getElementById('search');
 const searchWrapper = document.querySelector('.wrapperSearch');
 const resultsWrapper = document.getElementById('resultsWrapper');
@@ -47,6 +46,7 @@ const searchHaltName = async searchText => {
 
     if (!haltnames.length) {
         haltnames[0] = "Kein Ergebnis";
+        haltIDs[0] = "42069";
     }
     //Shows Content on 
     let content = haltnames.map((item) => {
@@ -67,11 +67,17 @@ function searchClick(event){
 }
 
 function clickHandler(busstop){
+    haltname = busstop
     searchWrapper.classList.remove('show');
     searchInput.value = "";
-    currentStation.innerHTML = busstop;
-    getHaltID(); //should be obsolete in newabfahrten.js
-    getAbfahrten();
+    currentStation.innerHTML = haltname;
+    if(haltIDs[0] == "42069"){
+        clearAbfahrten();
+        currentHaltID.innerHTML = "";
+    }else {
+        getHaltID(); //should be obsolete in newabfahrten.js
+        getAbfahrten();
+    }
 }
 
 // Get HaltID Pretty janky cos one extra get that i probably dont need
