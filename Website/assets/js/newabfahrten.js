@@ -7,17 +7,17 @@ const currentStation = document.getElementById('currentStation');
 const currentHaltID = document.getElementById('currentHaltID');
 const searchButton = document.getElementById('searchButton');
 
-var haltinfo = ["Willkommen", 0];
+let haltinfo = [{"name":"Willkommen", "ID":""}];
 var abfahrten = new Array();
 
 function resetArray(){
-    haltinfo = ["Willkommen", 0];
+    haltinfo = [{"name":"Willkommen", "ID":""}];
 }
 
 // Search Input Events and removing autosearch box
 searchInput.addEventListener("keyup", e => {
     if(e.key == "Enter"){
-        clickHandler(haltinfo[0][0]);
+        clickHandler(haltinfo[0].ID);
     }
     let input = searchInput.value;
     if (input.length >= 4) {
@@ -29,7 +29,7 @@ searchInput.addEventListener("keyup", e => {
 });
 
 // Searchbutton Eventlistener Looks for first Result
-searchButton.addEventListener("click", clickHandler(haltinfo[0][0]));
+searchButton.addEventListener("click", clickHandler(haltinfo[0].ID));
 
 // Looks for HaltName and ID from sInput Variable /// new implementation of HaltName and HaltID lookup
 const searchHaltNameID = async function search(sInput){
@@ -45,7 +45,7 @@ const searchHaltNameID = async function search(sInput){
     }
     //If no result
     if(!haltinfo.length)
-        haltinfo[0][0] = "Kein Ergebnis"; //Maybe Help Page for no Result?
+        haltinfo[0].ID = "Kein Ergebnis"; //Maybe Help Page for no Result?
 
     console.log(haltinfo);
 }
@@ -83,7 +83,7 @@ function clickHandler(busstop){
 
 //sets haltinfo[0] to the current Busstop / Removes the need for some global Variables from old implementation
 function setCurrentHalt(busstop){
-    if (haltinfo[0][0] != busstop){
+    if (haltinfo[0].ID != busstop){
         for(var k in haltinfo){
             if(!found && (haltinfo[k] == busstop)){
                 haltinfo[0][0] = haltinfo[k][0];
@@ -169,13 +169,6 @@ function renderAbfahrten(){
     //Assigns opnvicons for later Use
     opnvicons = document.getElementsByClassName('.opnvicon');
 }
-
-
-
-
-
-
-
 
 //AbfahrtObject for abfahrten Array
 function abfahrtObj(route, destination, departureIn, type, tripnbr){
