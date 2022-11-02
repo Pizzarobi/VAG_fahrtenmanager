@@ -46,6 +46,7 @@ const searchHaltName = async searchText => {
 
     if (!haltnames.length) {
         haltnames[0] = "Kein Ergebnis";
+        haltIDs[0] = "42069";
     }
     //Shows Content on 
     let content = haltnames.map((item) => {
@@ -66,11 +67,17 @@ function searchClick(event){
 }
 
 function clickHandler(busstop){
+    haltname = busstop
     searchWrapper.classList.remove('show');
     searchInput.value = "";
-    currentStation.innerHTML = busstop;
-    getHaltID(); //should be obsolete in newabfahrten.js
-    getAbfahrten();
+    currentStation.innerHTML = haltname;
+    if(haltIDs[0] == "42069"){
+        clearAbfahrten();
+        currentHaltID.innerHTML = "";
+    }else {
+        getHaltID(); //should be obsolete in newabfahrten.js
+        getAbfahrten();
+    }
 }
 
 // Get HaltID Pretty janky cos one extra get that i probably dont need
@@ -144,7 +151,7 @@ function renderAbfahrten(){
                 '<div class="card-body" style="padding: 10px;margin: 0px;padding-right: 10px;">',
                     '<div class="row" style="margin: 5px;">',
                         '<div class="w-100 d-flex"></div>',
-                        '<div id="opnvicon" class="col-auto" style="padding: 0px;width: 10%;"><i id="opnvicon" class="material-icons d-flex justify-content-center align-items-start" data-toggle="tooltip" info="'+ tooltip + '" title="Klicken fuer mehr Info" data-bss-tooltip="" style="font-size: 40px;">' + icon + '</i>',
+                        '<div id="opnvicon" class="col-auto" style="padding: 0px;width: 10%;"><i id="opnvicon" class="material-icons d-flex justify-content-center align-items-start" data-toggle="tooltip" info="'+ tooltip + '" title="Klicken für mehr Info" data-bss-tooltip="" style="font-size: 40px;">' + icon + '</i>',
                             '<p style="width: auto;font-size: 25px;margin: 0px;">'+ route + '</p>',
                         '</div>',
                         '<div class="col-3 d-flex justify-content-center align-items-center" style="padding: 0px;max-width: 800px;">',
@@ -205,6 +212,8 @@ const getFahrtplan = async searchText => {
     renderAbfahrten();
 }
 
+// Filters Departures
+// Don't show if vehicle allready passed station
 function filterAbfahrten(){
     var tempAbfahrten = new Array();
     for (var k in abfahrten){
